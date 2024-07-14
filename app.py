@@ -18,16 +18,19 @@ def process_pdb(file_path):
     modified_structure = structure.copy()
     active_sites = []
 
-    for model in structure:
+    for model in modified_structure:
         for chain in model:
             for residue in chain:
                 for atom in residue:
                     if atom.element == "N":
                         coords = np.array([atom.coord])
+                        print("Atom coordinates:", coords)
                         prediction = svm_model.predict(coords)
+                        print("Prediction:", prediction)
                         if prediction[0] == 1:
                             active_sites.append(residue.id[1])
                             atom.element = "P"  # Modify the element of nitrogen atoms predicted as active
+                            print("Active site residue:", residue.id)
 
     # Save the modified PDB structure
     io = PDBIO()
